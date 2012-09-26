@@ -202,4 +202,25 @@ AudioDeviceID obtainDefaultOutputDevice()
 }
 
 
+//
+//	Increase the volume of the system device by a certain value
+//
+//	IN:		(float)increase value
+//	OUT:	none
+//
++ (void)increaseSystemVolumeBy:(float)amount; {
+    [self setSystemVolume:self.systemVolume+amount];
+}
+
+//
+//	Decrease the volume of the system device by a certain value
+//
+//	IN:		(float)decrease value
+//	OUT:	none
+//
++ (void)decreaseSystemVolumeBy:(float)amount; {
+    [self setSystemVolume:self.systemVolume-amount];
+}
+
+
 @end

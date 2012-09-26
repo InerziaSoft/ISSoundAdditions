@@ -44,6 +44,8 @@
 
 + (float)systemVolume;
 + (void)setSystemVolume:(float)inVolume;
++ (void)increaseSystemVolumeBy:(float)amount;
++ (void)decreaseSystemVolumeBy:(float)amount;
 + (AudioDeviceID)defaultOutputDevice;
 
 #define	THRESHOLD	0.001				//if the volume should be set under this value, the device will be muted
