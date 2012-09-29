@@ -1,5 +1,5 @@
 //
-//  ISSoundAdditions.m
+//  ISSoundAdditions.m (ver 1.1)
 //
 //	Created by Massimo Moiso (2012-09) InerziaSoft
 //	based on an idea of Antonio Nunes, SintraWorks

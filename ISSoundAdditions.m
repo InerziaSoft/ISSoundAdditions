@@ -142,6 +142,10 @@ AudioDeviceID obtainDefaultOutputDevice()
 		hasMute = AudioObjectHasProperty(defaultDevID, &theAddress);
 		if (hasMute)
 			theError = AudioObjectIsPropertySettable(defaultDevID, &theAddress, &canMute);
+			if (theError != noErr) {
+				canMute = NO;
+				NSLog(@"Should mute device 0x%0x but did not success",defaultDevID);
+			}
 		else
 			canMute = NO;
 	}
