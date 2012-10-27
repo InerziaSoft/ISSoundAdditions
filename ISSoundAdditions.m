@@ -1,5 +1,5 @@
 //
-//  ISSoundAdditions.m
+//  ISSoundAdditions.m (ver 1.2 - 2012.10.27)
 //
 //	Created by Massimo Moiso (2012-09) InerziaSoft
 //	based on an idea of Antonio Nunes, SintraWorks
@@ -117,8 +117,8 @@ AudioDeviceID obtainDefaultOutputDevice()
 	AudioDeviceID				defaultDevID;
 	OSStatus					theError = noErr;
 	UInt32						muted;
-	Boolean						canSetVol = NO, muteValue;
-	Boolean						hasMute = NO, canMute = NO;
+	Boolean						canSetVol = YES, muteValue;
+	Boolean						hasMute = YES, canMute = YES;
 	
 	defaultDevID = obtainDefaultOutputDevice();
 	if (defaultDevID == kAudioObjectUnknown) {			//device not found: return without trying to set
@@ -129,76 +129,75 @@ AudioDeviceID obtainDefaultOutputDevice()
 		//check if the new value is in the correct range - normalize it if not
 	newValue = theVolume > 1.0 ? 1.0 : (theVolume < 0.0 ? 0.0 : theVolume);
 	if (newValue != theVolume) {
-		NSLog(@"Tentative volume (%f.2) was out of range; reset to %f.2", theVolume, newValue);
+		NSLog(@"Tentative volume (%5.2f) was out of range; reset to %5.2f", theVolume, newValue);
 	}
 	
 	theAddress.mElement = kAudioObjectPropertyElementMaster;
 	theAddress.mScope = kAudioDevicePropertyScopeOutput;
 	
-		//set the selector to mute or not by checking if under threshold
-		//and check if a mute command is available
-	if ( (muteValue = (newValue < THRESHOLD)) )	{
+		//set the selector to mute or not by checking if under threshold and check if a mute command is available
+	if ( (muteValue = (newValue < THRESHOLD)) )
+	{
 		theAddress.mSelector = kAudioDevicePropertyMute;
 		hasMute = AudioObjectHasProperty(defaultDevID, &theAddress);
 		if (hasMute)
+		{
 			theError = AudioObjectIsPropertySettable(defaultDevID, &theAddress, &canMute);
-			if (theError != noErr) {
+			if (theError != noErr || !canMute)
+			{
 				canMute = NO;
 				NSLog(@"Should mute device 0x%0x but did not success",defaultDevID);
 			}
-		else
-			canMute = NO;
+		}
+		else canMute = NO;
 	}
-	else	{
+	else
+	{
 		theAddress.mSelector = kAudioHardwareServiceDeviceProperty_VirtualMasterVolume;
 	}
 	
-		//be sure the device has a volume to set
-	if (! AudioObjectHasProperty(defaultDevID, &theAddress)) {
+// **** now manage the volume following the what we found ****
+	
+		//be sure the device has a volume command
+	if (! AudioObjectHasProperty(defaultDevID, &theAddress))
+	{
 		NSLog(@"The device 0x%0x does not have a volume to set", defaultDevID);
 		return;
 	}
 	
 		//be sure the device can set the volume
 	theError = AudioObjectIsPropertySettable(defaultDevID, &theAddress, &canSetVol);
-	if ( theError!=noErr || canSetVol == NO ) {
+	if ( theError!=noErr || !canSetVol )
+	{
 		NSLog(@"The volume of device 0x%0x cannot be set", defaultDevID);
 		return;
 	}
 	
-		//if under the threshold then mute it, if possible
-	if (muteValue && hasMute && canMute) {
+		//if under the threshold then mute it, only if possible - done/exit
+	if (muteValue && hasMute && canMute)
+	{
 		muted = 1;
 		theError = AudioObjectSetPropertyData(defaultDevID, &theAddress, 0, NULL, sizeof(muted), &muted);
-		if (theError != noErr) {
+		if (theError != noErr)
+		{
 			NSLog(@"The device 0x%0x was not muted",defaultDevID);
 			return;
 		}
 	}
-		//else set it
-	else {
+	else		//else set it
+	{
 		theError = AudioObjectSetPropertyData(defaultDevID, &theAddress, 0, NULL, sizeof(newValue), &newValue);
-		if (theError != noErr) {
+		if (theError != noErr)
+		{
 			NSLog(@"The device 0x%0x was unable to set volume", defaultDevID);
 		}
-		
-//		theAddress.mSelector = kAudioDevicePropertyMute;
-//		muted = 0;
-//		if ( ! AudioObjectHasProperty(defaultDevID, &theAddress)) {
-//			NSLog(@"Device 0x%0x does not support muting", defaultDevID);
-//			return;
-//		}
-//		theError = AudioObjectIsPropertySettable(defaultDevID, &theAddress, &canMute);
-//		if (theError != noErr || !canMute) {
-//			NSLog(@"Device 0x%0x cannot be muted", defaultDevID);
-//			return;
-//		}
-		if (hasMute && canMute) {
+			//if device is able to handle muting, maybe it was muted, so unlock it
+		if (hasMute && canMute)
+		{
 			theAddress.mSelector = kAudioDevicePropertyMute;
 			muted = 0;
 			theError = AudioObjectSetPropertyData(defaultDevID, &theAddress, 0, NULL, sizeof(muted), &muted);
 		}
-		
 	}
 	if (theError != noErr) {
 		NSLog(@"Unable to set volume for device 0x%0x", defaultDevID);
@@ -209,22 +208,57 @@ AudioDeviceID obtainDefaultOutputDevice()
 //
 //	Increase the volume of the system device by a certain value
 //
-//	IN:		(float)increase value
+//	IN:		(float) amount of volume to increase
 //	OUT:	none
 //
-+ (void)increaseSystemVolumeBy:(float)amount; {
++ (void)increaseSystemVolumeBy:(float)amount {
     [self setSystemVolume:self.systemVolume+amount];
 }
 
 //
 //	Decrease the volume of the system device by a certain value
 //
-//	IN:		(float)decrease value
+//	IN:		(float) amount of volume to decrease
 //	OUT:	none
 //
-+ (void)decreaseSystemVolumeBy:(float)amount; {
++ (void)decreaseSystemVolumeBy:(float)amount {
     [self setSystemVolume:self.systemVolume-amount];
 }
 
+//
+//	IN:		(Boolean) if true the device is muted, false it is unmated
+//	OUT:		none
+//
++ (void)applyMute:(Boolean)m
+{
+	AudioDeviceID				defaultDevID = kAudioObjectUnknown;
+	AudioObjectPropertyAddress	theAddress;
+	Boolean						hasMute, canMute = YES;
+	OSStatus					theError = noErr;
+	UInt32						muted = 0;
+	
+	defaultDevID = obtainDefaultOutputDevice();
+	if (defaultDevID == kAudioObjectUnknown) {			//device not found
+		NSLog(@"Device unknown");
+		return;
+	}
+	
+	theAddress.mElement = kAudioObjectPropertyElementMaster;
+	theAddress.mScope = kAudioDevicePropertyScopeOutput;
+	theAddress.mSelector = kAudioDevicePropertyMute;
+	muted = m ? 1 : 0;
+	
+	hasMute = AudioObjectHasProperty(defaultDevID, &theAddress);
+	
+	if (hasMute)
+	{
+		theError = AudioObjectIsPropertySettable(defaultDevID, &theAddress, &canMute);
+		if (theError == noErr && canMute)
+		{
+			theError = AudioObjectSetPropertyData(defaultDevID, &theAddress, 0, NULL, sizeof(muted), &muted);
+			if (theError != noErr) NSLog(@"Cannot change mute status of device 0x%0x", defaultDevID);
+		}
+	}
+}
 
 @end
