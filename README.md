@@ -13,10 +13,13 @@ USE
 To maintain the Cocoa conventions, a property-like syntax was used; the following
 methods ("properties") are available:
  
-  (float)systemVolume			            - return the volume of the default sound device
-	setSystemVolume(float)			        - set the volume of the default sound device
-	(AudioDeviceID)defaultOutput Device	- return the default output device
-	applyMute(boolean)			            - enable or disable muting, if supported
+(float)systemVolume			- return the volume of the default sound device
+
+setSystemVolume(float)			- set the volume of the default sound device
+
+(AudioDeviceID)defaultOutput Device	- return the default output device	
+
+applyMute(boolean)			- enable or disable muting, if supported`
  
 REQUIREMENTS
 At least MacOS X 10.6
