@@ -225,6 +225,34 @@ AudioDeviceID obtainDefaultOutputDevice()
     [self setSystemVolume:self.systemVolume-amount];
 }
 
++ (BOOL)isMuted
+{
+    AudioDeviceID				defaultDevID = kAudioObjectUnknown;
+    AudioObjectPropertyAddress	theAddress;
+    Boolean						hasMute = YES;
+    OSStatus					theError = noErr;
+    UInt32						muted = 0;
+    UInt32						theSize = sizeof(Float32);
+    
+    defaultDevID = obtainDefaultOutputDevice();
+    if (defaultDevID == kAudioObjectUnknown) {			//device not found
+        NSLog(@"Device unknown");
+        return NO;
+    }
+    
+    theAddress.mElement = kAudioObjectPropertyElementMaster;
+    theAddress.mScope = kAudioDevicePropertyScopeOutput;
+    theAddress.mSelector = kAudioDevicePropertyMute;
+    
+    hasMute = AudioObjectHasProperty(defaultDevID, &theAddress);
+    
+    if (hasMute){
+        theError = AudioObjectGetPropertyData(defaultDevID, &theAddress, 0, nil, &theSize,  &muted);
+        if (theError != noErr) NSLog(@"Cannot get mute status of device 0x%0x", defaultDevID);
+    }
+    return muted;
+}
+
 //
 //	IN:		(Boolean) if true the device is muted, false it is unmated
 //	OUT:		none
