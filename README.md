@@ -33,10 +33,10 @@ Documentation
 Returns the AudioDeviceID of the currently selected output device.
 
 `+ (float)systemVolume;`
-Returns a float representing the current system volume.
+Returns a float representing the current system volume (Range: 0.0 - 1.0).
 
 `+ (void)setSystemVolume:(float)inVolume;`
-Sets the system volume of the currently selected output device to *inVolume*.
+Sets the system volume of the currently selected output device to *inVolume*  (Range: 0.0 - 1.0).
 
 `+ (void)increaseSystemVolumeBy:(float)amount;`
 Increases the system volume by *amount*.
@@ -46,6 +46,9 @@ Decreases the system volume by *amount*.
 
 `+ (void)applyMute:(Boolean)m;`
 Mute or unmute the currently selected output device.
+
+`+ (Boolean)isMuted;`
+Return whether the default device is muted.
 
 `#define	THRESHOLD`
 ISSoundAdditions will mute the output device if the computed system volume (after a call to *setSystemVolume* or *increaseSystemVolumeBy*) is lower than the threshold.

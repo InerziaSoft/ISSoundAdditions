@@ -261,4 +261,41 @@ AudioDeviceID obtainDefaultOutputDevice()
 	}
 }
 
++ (Boolean)isMuted
+{
+    AudioDeviceID				defaultDevID = kAudioObjectUnknown;
+    AudioObjectPropertyAddress	theAddress;
+    Boolean						hasMute, canMute = YES;
+    OSStatus					theError = noErr;
+    UInt32						muted = 0;
+    UInt32                      mutedSize = 4;
+    
+    defaultDevID = obtainDefaultOutputDevice();
+    if (defaultDevID == kAudioObjectUnknown) {			//device not found
+        NSLog(@"Device unknown");
+        return false;           // works, but not the best return code for this
+    }
+    
+    theAddress.mElement = kAudioObjectPropertyElementMaster;
+    theAddress.mScope = kAudioDevicePropertyScopeOutput;
+    theAddress.mSelector = kAudioDevicePropertyMute;
+    
+    hasMute = AudioObjectHasProperty(defaultDevID, &theAddress);
+    
+    if (hasMute)
+    {
+        theError = AudioObjectIsPropertySettable(defaultDevID, &theAddress, &canMute);
+        if (theError == noErr && canMute)
+        {
+            theError = AudioObjectGetPropertyData(defaultDevID, &theAddress, 0, NULL, &mutedSize, &muted);
+            if (muted) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+
 @end
