@@ -52,6 +52,7 @@
 + (void)decreaseSystemVolumeBy:(float)amount;
 
 + (void)applyMute:(Boolean)m;
++ (Boolean)isMuted;
 
 #define	THRESHOLD	0.005			//if the volume should be set under this value, the device will be muted
 
