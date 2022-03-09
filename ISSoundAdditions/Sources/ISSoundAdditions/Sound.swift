@@ -1,4 +1,9 @@
-
+//
+//  SoundOutputManager.swift
+//
+//
+//  Created by Alessio Moiso on 08.03.22.
+//
 
 /// Entry point to access and modify the system sound settings, such
 /// muting/unmuting and changing the volume.
@@ -8,5 +13,5 @@
 /// You can use the shared instance to change the output volume as well as
 /// mute and unmute.
 public enum Sound {
-  public static let output = SoundOutputManager()
+  static let output = SoundOutputManager()
 }

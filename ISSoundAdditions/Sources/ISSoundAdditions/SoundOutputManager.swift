@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SoundOutputManager.swift
 //  
 //
 //  Created by Alessio Moiso on 08.03.22.
@@ -18,11 +18,18 @@ extension Sound {
   /// will be applied immediately and errors will be hidden.
   /// - you can call its methods and handle errors manually.
   public final class SoundOutputManager {
+    /// All the possible errors that could occur while interacting
+    /// with the default output device.
     enum Errors: Error {
-      case operationFailed(OSStatus)
-      case unsupportedProperty
-      case immutableProperty
-      case noDevice
+            /// The system couldn't complete the requested operation and
+            /// returned the given status.
+      case  operationFailed(OSStatus)
+            /// The current default output device doesn't support the requested property.
+      case  unsupportedProperty
+            /// The current default output device doesn't allow changing the requested property.
+      case  immutableProperty
+            /// There is no default output device.
+      case  noDevice
     }
     
     internal init() { }
@@ -34,7 +41,7 @@ extension Sound {
     ///
     /// - throws: `Errors.operationFailed` if the system fails to return the default output device.
     /// - returns: the default device ID or `nil` if none is set.
-    func retrieveDefaultOutputDevice() throws -> AudioDeviceID? {
+    public func retrieveDefaultOutputDevice() throws -> AudioDeviceID? {
       var result = kAudioObjectUnknown
       var size = UInt32(MemoryLayout<AudioDeviceID>.size)
       var address = AudioObjectPropertyAddress(
@@ -52,6 +59,10 @@ extension Sound {
         throw Errors.operationFailed(error)
       }
       
+      if result == kAudioObjectUnknown {
+        throw Errors.noDevice
+      }
+      
       return result
     }
     
@@ -59,8 +70,8 @@ extension Sound {
     ///
     /// - throws: `Errors.noDevice` if the system doesn't have a default output device; `Errors.unsupportedProperty` if the current device doesn't have a volume property; `Errors.operationFailed` if the system is unable to read the property value.
     /// - returns: The current volume in a range between 0 and 1.
-    func readVolume() throws -> Float {
-      guard let deviceID = defaultOutputDevice else {
+    public func readVolume() throws -> Float {
+      guard let deviceID = try retrieveDefaultOutputDevice() else {
         throw Errors.noDevice
       }
       
@@ -89,8 +100,8 @@ extension Sound {
     ///
     /// - parameter newValue: The volume to set in a range between 0 and 1.
     /// - throws: `Erors.noDevice` if the system doesn't have a default output device; `Errors.unsupportedProperty` or `Errors.immutableProperty` if the output device doesn't support setting or doesn't currently allow changes to its volume; `Errors.operationFailed` if the system is unable to apply the volume change.
-    func setVolume(_ newValue: Float) throws {
-      guard let deviceID = defaultOutputDevice else {
+    public func setVolume(_ newValue: Float) throws {
+      guard let deviceID = try retrieveDefaultOutputDevice() else {
         throw Errors.noDevice
       }
       
@@ -131,8 +142,8 @@ extension Sound {
     /// `Errors.unsupportedProperty` if the current device doesn't have a mute property;
     /// `Errors.operationFailed` if the system is unable to read the property value.
     /// - returns: Whether the device is muted or not.
-    func readMute() throws -> Bool {
-      guard let deviceID = defaultOutputDevice else {
+    public func readMute() throws -> Bool {
+      guard let deviceID = try retrieveDefaultOutputDevice() else {
         throw Errors.noDevice
       }
       
@@ -165,8 +176,8 @@ extension Sound {
     /// `Errors.unsupportedProperty` or `Errors.immutableProperty` if the output device doesn't
     /// support setting or doesn't currently allow changes to its mute property; `Errors.operationFailed`
     /// if the system is unable to apply the change.
-    func mute(_ isMuted: Bool) throws {
-      guard let deviceID = defaultOutputDevice else {
+    public func mute(_ isMuted: Bool) throws {
+      guard let deviceID = try retrieveDefaultOutputDevice() else {
         throw Errors.noDevice
       }
       
@@ -196,52 +207,6 @@ extension Sound {
       if error != noErr {
         throw Errors.operationFailed(error)
       }
-    }
-  }
-}
-
-public extension Sound.SoundOutputManager {
-  /// Get the system default output device.
-  ///
-  /// You can use this value to interact with the device directly via
-  /// other system calls.
-  ///
-  /// This value will return `nil` if there is currently no device selected in
-  /// System Preferences > Sound > Output.
-  var defaultOutputDevice: AudioDeviceID? {
-    try? retrieveDefaultOutputDevice()
-  }
-  
-  /// Get or set the volume of the default output device.
-  ///
-  /// Errors will be ignored. If you need to handle errors,
-  /// use `readVolume` and `setVolume`.
-  ///
-  /// The values range between 0 and 1.
-  var volume: Float {
-    get {
-      (try? readVolume()) ?? 0
-    }
-    set {
-      do {
-        try setVolume(newValue)
-      } catch { }
-    }
-  }
-  
-  /// Get or set whether the system default output device is muted or not.
-  ///
-  /// Errors will be ignored. If you need to handle errors,
-  /// use `readMute` and `mute`. Devices that do not support muting
-  /// will always return `false`.
-  var isMuted: Bool {
-    get {
-      (try? readMute()) ?? false
-    }
-    set {
-      do {
-        try mute(newValue)
-      } catch { }
     }
   }
 }
