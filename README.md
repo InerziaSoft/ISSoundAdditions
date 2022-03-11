@@ -86,3 +86,25 @@ let isMuted = try Sound.output.readMute()
 try Sound.output.mute(true)
 try Sound.output.mute(false)
 ```
+
+## Documentation
+All classes and methods are fully documented.
+You can access the documentation in Xcode.
+
+## Compatibility
+ISSoundAdditions is compatible with **macOS 10.12** or higher.
+
+*If you're targeting older versions of macOS, you can download version 1 using the Releases tab here on GitHub. Version 1 requires macOS 10.6 or later.*
+
+## Contributions
+All contributions to expand the library are welcome. Fork the repo, make the changes you want, and open a Pull Request.
+
+If you make changes to the codebase, we are not enforcing a coding style, but we may ask you to make changes based on how the rest of the library is made.
+
+## Status
+The library can be considered **stable** and can be used in Production apps.
+
+Starting with version 2, in case breaking changes are introduced, we will follow [Semantic Versioning](https://semver.org/) strictly.
+
+## License
+ISSoundAdditions is distributed under the MIT license. See [LICENSE](https://github.com/InerziaSoft/ISSoundAdditions/blob/master/LICENSE) for details.

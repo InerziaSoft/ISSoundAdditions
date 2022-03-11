@@ -54,4 +54,23 @@ final class ISSoundAdditionsTests: XCTestCase {
     XCTAssertEqual(firstExpectedMuteState, firstActualMuteState)
     XCTAssertEqual(secondExpectedMuteState, secondActualMuteState)
   }
+  
+  func testAutoMute() {
+    // GIVEN
+    let expectedUnmutedVolume: Float = 0.7
+    let expectedMutedVolume: Float = 0.1
+    let muteThreshold: Float = 0.2
+    
+    // WHEN
+    Sound.output.isMuted = true
+    Sound.output.setVolume(expectedUnmutedVolume, autoMuteUnmute: true, muteThreshold: muteThreshold)
+    let expectUnmuted = Sound.output.isMuted
+    
+    Sound.output.setVolume(expectedMutedVolume, autoMuteUnmute: true, muteThreshold: muteThreshold)
+    let expectMuted = Sound.output.isMuted
+    
+    // THEN
+    XCTAssertFalse(expectUnmuted)
+    XCTAssertTrue(expectMuted)
+  }
 }
