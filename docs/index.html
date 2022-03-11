@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ISSoundAdditions  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a title="ISSoundAdditions  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">ISSoundAdditions Docs</a> (100% documented)</p>
+        <div class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">ISSoundAdditions Reference</a>
+        <img id="carat" src="img/carat.png" alt=""/>
+        ISSoundAdditions  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/Sound.html">Sound</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/Sound/SoundOutputManager.html">– SoundOutputManager</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <h1 id='issoundadditions' class='heading'>ISSoundAdditions</h1>
+
+<p><a href="https://swift.org/package-manager">
+  <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" />
+</a></p>
+
+<p>ISSoundAdditions is a Swift Package for macOS that allows to control the volume of the default output device, as well as muting and unmuting. The entire implementation relies on various CoreAudio calls, but they are exposed in a clean and simple Swift flavor.</p>
+<h2 id='installation' class='heading'>Installation</h2>
+
+<p>ISSoundAdditions is available via <a href="https://swift.org/package-manager">Swift Package Manager</a>.</p>
+<pre class="highlight swift"><code><span class="o">.</span><span class="nf">package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/InerziaSoft/ISSoundAdditions"</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="s">"&lt;see GitHub releases&gt;"</span><span class="p">)</span>
+</code></pre>
+<h3 id='latest-release' class='heading'>Latest Release</h3>
+
+<p>To find out the latest version, look at the Releases tab of this repository.</p>
+<h2 id='getting-started' class='heading'>Getting Started</h2>
+
+<p>All the functions of the library are exposed through the <code><a href="Enums/Sound.html">Sound</a></code> class. This class cannot be instantiated, but it provides a structure to access the <code>output</code>, which represents the default device using for sound output. This structure also allows for future improvements, such as adding support for <code>input</code> devices.</p>
+
+<p>There are two ways to interact with the library: simple mode (via properties) or manual mode (via method calls).</p>
+<h3 id='simple-mode' class='heading'>Simple Mode</h3>
+
+<p>If your application doesn&rsquo;t care about errors management and you&rsquo;re just looking for a simple way to change the system volume, mute or unmute, you can interact with the properties offered by the shared instance of <code>SoundOutputManager</code>.</p>
+<pre class="highlight swift"><code><span class="c1">// Retrieve the default output device</span>
+<span class="k">let</span> <span class="nv">deviceID</span> <span class="o">=</span> <span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">defaultOutputDevice</span>
+
+<span class="c1">// Get the current volume</span>
+<span class="k">let</span> <span class="nv">currentVolume</span> <span class="o">=</span> <span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">volume</span>
+<span class="c1">// Set the volume (values between 0 and 1)</span>
+<span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="mf">0.7</span>
+
+<span class="c1">// Get the mute property value</span>
+<span class="k">let</span> <span class="nv">isMuted</span> <span class="o">=</span> <span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">isMuted</span>
+<span class="c1">// Mute or unmute</span>
+<span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">isMuted</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">isMuted</span> <span class="o">=</span> <span class="kc">false</span>
+</code></pre>
+
+<p>When interacting with these properties, all errors will be ignored. <em>When running in Debug mode, you will still be able to see some of the errors, as CoreAudio logs them to the console.</em></p>
+<h4 id='goodies' class='heading'>Goodies</h4>
+
+<p>This library also provides some additional methods that interact with the properties shown above.</p>
+<pre class="highlight swift"><code><span class="c1">// Increase the volume by a given amount</span>
+<span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="nf">increaseVolume</span><span class="p">(</span><span class="nv">by</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">)</span>
+<span class="c1">// Decrease the volume by a given amount</span>
+<span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="nf">decreaseVolume</span><span class="p">(</span><span class="nv">by</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">)</span>
+
+<span class="c1">// Set the volume and, optionally,</span>
+<span class="c1">// automatically mutes or unmutes if the resulting volume</span>
+<span class="c1">// is below or above the given threshold (which defaults to 0.005).</span>
+<span class="c1">// The `autoMuteUnmute` parameter can also be used on the other</span>
+<span class="c1">// two methods above.</span>
+<span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="nf">setVolume</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nv">autoMuteUnmute</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+</code></pre>
+<h3 id='manual-mode' class='heading'>Manual Mode</h3>
+
+<p>A lot of things can go wrong when trying to manipulate the system volume, muting, unmuting and even when getting the current default output device. If you&rsquo;re interested in intercepting these errors, you can call the methods provided by the shared instance of <code>SoundOutputManager</code>.</p>
+<pre class="highlight swift"><code><span class="c1">// Retrieve the default output device</span>
+<span class="c1">// Returns `nil` if no device is set or throws if an error occurs.</span>
+<span class="k">let</span> <span class="nv">deviceID</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="nf">retrieveDefaultOutputDevice</span><span class="p">()</span>
+
+<span class="c1">// Get the current volume</span>
+<span class="c1">// Throws if an error occurs and will also throw if</span>
+<span class="c1">// the current output device doesn't have a volume (eg. virtual devices)</span>
+<span class="k">let</span> <span class="nv">currentVolume</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">readVolume</span>
+<span class="c1">// Set the volume (values between 0 and 1)</span>
+<span class="c1">// Throws if an error occurs, including when the current output device</span>
+<span class="c1">// doesn't have a volume or doesn't allow changing it.</span>
+<span class="k">try</span> <span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="nf">setVolume</span><span class="p">(</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="c1">// Get the mute property value</span>
+<span class="c1">// Throws if an error occurs and will also throw if</span>
+<span class="c1">// the current output device doesn't have the mute property.</span>
+<span class="k">let</span> <span class="nv">isMuted</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="nf">readMute</span><span class="p">()</span>
+<span class="c1">// Mute or unmute</span>
+<span class="c1">// Throws if an error occurs, including when the current output device</span>
+<span class="c1">// doesn't have the mute property or doesn't allow changing it.</span>
+<span class="k">try</span> <span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="nf">mute</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+<span class="k">try</span> <span class="kt">Sound</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="nf">mute</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+</code></pre>
+<h2 id='documentation' class='heading'>Documentation</h2>
+
+<p>All classes and methods are fully documented.
+You can access the documentation in Xcode.</p>
+<h2 id='compatibility' class='heading'>Compatibility</h2>
+
+<p>ISSoundAdditions is compatible with <strong>macOS 10.12</strong> or higher.</p>
+
+<p><em>If you&rsquo;re targeting older versions of macOS, you can download version 1 using the Releases tab here on GitHub. Version 1 requires macOS 10.6 or later.</em></p>
+<h2 id='contributions' class='heading'>Contributions</h2>
+
+<p>All contributions to expand the library are welcome. Fork the repo, make the changes you want, and open a Pull Request.</p>
+
+<p>If you make changes to the codebase, we are not enforcing a coding style, but we may ask you to make changes based on how the rest of the library is made.</p>
+<h2 id='status' class='heading'>Status</h2>
+
+<p>The library can be considered <strong>stable</strong> and can be used in Production apps.</p>
+
+<p>Starting with version 2, in case breaking changes are introduced, we will follow <a href="https://semver.org/">Semantic Versioning</a> strictly.</p>
+<h2 id='license' class='heading'>License</h2>
+
+<p>ISSoundAdditions is distributed under the MIT license. See <a href="https://github.com/InerziaSoft/ISSoundAdditions/blob/master/LICENSE">LICENSE</a> for details.</p>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-03-11)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SoundOutputManager Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+    <script src="../../js/lunr.min.js" defer></script>
+    <script src="../../js/typeahead.jquery.js" defer></script>
+    <script src="../../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/SoundOutputManager" class="dashAnchor"></a>
+    <a title="SoundOutputManager Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../../index.html">ISSoundAdditions Docs</a> (100% documented)</p>
+        <div class="header-right">
+          <form role="search" action="../../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../../index.html">ISSoundAdditions Reference</a>
+        <img id="carat" src="../../img/carat.png" alt=""/>
+        SoundOutputManager Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../../Enums/Sound.html">Sound</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../../Enums/Sound/SoundOutputManager.html">– SoundOutputManager</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>SoundOutputManager</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">SoundOutputManager</span></code></pre>
+
+                </div>
+              </div>
+            <p>Mute, unmute and change the volume of the system default output device.</p>
+<h1 id='overview' class='heading'>Overview</h1>
+
+<p>You can interact with this class in two ways:</p>
+
+<ul>
+<li>you can interact with its properties, meaning that all changes
+will be applied immediately and errors will be hidden.</li>
+<li>you can call its methods and handle errors manually.</li>
+</ul>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC015retrieveDefaultD6Devices6UInt32VSgyKF"></a>
+                    <a name="//apple_ref/swift/Method/retrieveDefaultOutputDevice()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC015retrieveDefaultD6Devices6UInt32VSgyKF">retrieveDefaultOutputDevice()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get the system default output device.</p>
+
+<p>You can use this value to interact with the device directly
+via other system calls.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code>Errors.operationFailed</code> if the system fails to return the default output device.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">retrieveDefaultOutputDevice</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">AudioDeviceID</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>the default device ID or <code>nil</code> if none is set.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC10readVolumeSfyKF"></a>
+                    <a name="//apple_ref/swift/Method/readVolume()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC10readVolumeSfyKF">readVolume()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get the volume of the system default output device.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code>Errors.noDevice</code> if the system doesn&rsquo;t have a default output device; <code>Errors.unsupportedProperty</code> if the current device doesn&rsquo;t have a volume property; <code>Errors.operationFailed</code> if the system is unable to read the property value.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">readVolume</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Float</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The current volume in a range between 0 and 1.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC9setVolumeyySfKF"></a>
+                    <a name="//apple_ref/swift/Method/setVolume(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC9setVolumeyySfKF">setVolume(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set the volume of the system default output device.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code>Erors.noDevice</code> if the system doesn&rsquo;t have a default output device; <code>Errors.unsupportedProperty</code> or <code>Errors.immutableProperty</code> if the output device doesn&rsquo;t support setting or doesn&rsquo;t currently allow changes to its volume; <code>Errors.operationFailed</code> if the system is unable to apply the volume change.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setVolume</span><span class="p">(</span><span class="n">_</span> <span class="nv">newValue</span><span class="p">:</span> <span class="kt">Float</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newValue</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The volume to set in a range between 0 and 1.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC8readMuteSbyKF"></a>
+                    <a name="//apple_ref/swift/Method/readMute()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC8readMuteSbyKF">readMute()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get whether the system default output device is currently muted or not.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code>Errors.noDevice</code> if the system doesn&rsquo;t have a default output device;
+<code>Errors.unsupportedProperty</code> if the current device doesn&rsquo;t have a mute property;
+<code>Errors.operationFailed</code> if the system is unable to read the property value.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">readMute</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Whether the device is muted or not.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC4muteyySbKF"></a>
+                    <a name="//apple_ref/swift/Method/mute(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC4muteyySbKF">mute(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Mute or unmute the system default output device.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code>Errors.noDevice</code> if the system doesn&rsquo;t have a default output device;
+<code>Errors.unsupportedProperty</code> or <code>Errors.immutableProperty</code> if the output device doesn&rsquo;t
+support setting or doesn&rsquo;t currently allow changes to its mute property; <code>Errors.operationFailed</code>
+if the system is unable to apply the change.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">mute</span><span class="p">(</span><span class="n">_</span> <span class="nv">isMuted</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isMuted</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Mute or unmute.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC14increaseVolume2by14autoMuteUnmute13muteThresholdySf_SbSftF"></a>
+                    <a name="//apple_ref/swift/Method/increaseVolume(by:autoMuteUnmute:muteThreshold:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC14increaseVolume2by14autoMuteUnmute13muteThresholdySf_SbSftF">increaseVolume(by:<wbr>autoMuteUnmute:<wbr>muteThreshold:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Increase the volume of the default output device
+by the given amount.</p>
+
+<p>Errors will be ignored.</p>
+
+<p>The values range between 0 and 1. If the increase results
+in a value outside of the bounds, it will be normalized to the closest
+value in the bounds.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">increaseVolume</span><span class="p">(</span><span class="n">by</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Float</span><span class="p">,</span> <span class="nv">autoMuteUnmute</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">muteThreshold</span><span class="p">:</span> <span class="kt">Float</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC14decreaseVolume2by14autoMuteUnmute13muteThresholdySf_SbSftF"></a>
+                    <a name="//apple_ref/swift/Method/decreaseVolume(by:autoMuteUnmute:muteThreshold:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC14decreaseVolume2by14autoMuteUnmute13muteThresholdySf_SbSftF">decreaseVolume(by:<wbr>autoMuteUnmute:<wbr>muteThreshold:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Decrease the volume of the default output device
+by the given amount.</p>
+
+<p>Errors will be ignored.</p>
+
+<p>The values range between 0 and 1. If the decrease results
+in a value outside of the bounds, it will be normalized to the closest
+value in the bounds.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">decreaseVolume</span><span class="p">(</span><span class="n">by</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">Float</span><span class="p">,</span> <span class="nv">autoMuteUnmute</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">muteThreshold</span><span class="p">:</span> <span class="kt">Float</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC9setVolume_14autoMuteUnmute13muteThresholdySf_SbSftF"></a>
+                    <a name="//apple_ref/swift/Method/setVolume(_:autoMuteUnmute:muteThreshold:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC9setVolume_14autoMuteUnmute13muteThresholdySf_SbSftF">setVolume(_:<wbr>autoMuteUnmute:<wbr>muteThreshold:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set the volume of the default output device and,
+if lower or higher then <code>muteThreshold</code> also toggles the mute property.</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    <p>This function will unmute a muted device, if the volume is greater
+then <code>muteThreshold</code>. Please, make sure that the user is aware of this and always
+respect the Do Not Disturb modes and other system settings.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setVolume</span><span class="p">(</span><span class="n">_</span> <span class="nv">newValue</span><span class="p">:</span> <span class="kt">Float</span><span class="p">,</span> <span class="nv">autoMuteUnmute</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">muteThreshold</span><span class="p">:</span> <span class="kt">Float</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newValue</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The volume.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>autoMuteUnmute</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If <code>true</code>, will use the <code>muteThreshold</code> to determine whether the device
+should also be muted or unmuted.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>muteThreshold</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Defines the threshold that should cause an automatic mute for all values below it.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC07defaultD6Devices6UInt32VSgvp"></a>
+                    <a name="//apple_ref/swift/Property/defaultOutputDevice" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC07defaultD6Devices6UInt32VSgvp">defaultOutputDevice</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get the system default output device.</p>
+
+<p>You can use this value to interact with the device directly via
+other system calls.</p>
+
+<p>This value will return <code>nil</code> if there is currently no device selected in
+System Preferences &gt; Sound &gt; Output.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">defaultOutputDevice</span><span class="p">:</span> <span class="kt">AudioDeviceID</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC6volumeSfvp"></a>
+                    <a name="//apple_ref/swift/Property/volume" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC6volumeSfvp">volume</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get or set the volume of the default output device.</p>
+
+<p>Errors will be ignored. If you need to handle errors,
+use <code>readVolume</code> and <code>setVolume</code>.</p>
+
+<p>The values range between 0 and 1.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">volume</span><span class="p">:</span> <span class="kt">Float</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16ISSoundAdditions5SoundO0C13OutputManagerC7isMutedSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isMuted" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16ISSoundAdditions5SoundO0C13OutputManagerC7isMutedSbvp">isMuted</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get or set whether the system default output device is muted or not.</p>
+
+<p>Errors will be ignored. If you need to handle errors,
+use <code>readMute</code> and <code>mute</code>. Devices that do not support muting
+will always return <code>false</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">isMuted</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-03-11)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

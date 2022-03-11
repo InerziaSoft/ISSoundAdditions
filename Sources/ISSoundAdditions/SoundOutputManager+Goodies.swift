@@ -5,7 +5,7 @@
 //  Created by Alessio Moiso on 09.03.22.
 //
 
-extension Sound.SoundOutputManager {
+public extension Sound.SoundOutputManager {
   /// Increase the volume of the default output device
   /// by the given amount.
   ///
