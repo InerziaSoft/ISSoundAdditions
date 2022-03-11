@@ -1,69 +1,110 @@
-ISSoundAdditions
-================
+# ISSoundAdditions
 
-ISSoundAdditions is a NSSound category to read and modify system volume effortlessly.
+<a href="https://swift.org/package-manager">
+  <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" />
+</a>
 
-It's entirely built using CoreAudio to get and set the volume of the system sound and some other utilities.
-It was implemented using the Apple documentation and various unattributed code fragments
-found on the net. For this reason, its use is free for all.
- 
-Getting Started
-=============
-To use this category, your application cannot run on OS X versions prior to OS X Snow Leopard 10.6.
+ISSoundAdditions is a Swift Package for macOS that allows to control the volume of the default output device, as well as muting and unmuting. The entire implementation relies on various CoreAudio calls, but they are exposed in a clean and simple Swift flavor.
 
-There are only two things to do, to correctly configure the ISSoundAdditions:
+## Installation
+ISSoundAdditions is available via [Swift Package Manager](https://swift.org/package-manager).
 
-1. Link your project against the CoreAudio Framework: in Xcode 5, select your project and then select your target. Look for the "Linked Frameworks and Libraries" section and click on the "+" button: in the panel that appears, select "CoreAudio.framework" and click "Add".
-2. ISSoundAdditions is composed of two files: ISSoundAdditions.h and its implementation .m. Add these files to your Xcode Project and import **ISSoundAdditions.h** in one of your classes.
+```swift
+.package(url: "https://github.com/InerziaSoft/ISSoundAdditions", from: "<see GitHub releases>")
+```
 
-Thanks to the fact that the ISSoundAdditions is a category of the NSSound class, you can use all of the new methods by just calling them on the NSSound class.
+### Latest Release
+To find out the latest version, look at the Releases tab of this repository.
 
-Features
-=============
-ISSoundAdditions offers all the information that you might need when working with system volume and output devices:
+## Getting Started
+All the functions of the library are exposed through the `Sound` class. This class cannot be instantiated, but it provides a structure to access the `output`, which represents the default device using for sound output. This structure also allows for future improvements, such as adding support for `input` devices.
 
-* Get and set the system volume of the selected output device.
-* Increase or decrease the system volume by a specified value.
-* Instantly mute and unmute the selected output device.
+There are two ways to interact with the library: simple mode (via properties) or manual mode (via method calls).
 
-Documentation
-=============
+### Simple Mode
+If your application doesn't care about errors management and you're just looking for a simple way to change the system volume, mute or unmute, you can interact with the properties offered by the shared instance of `SoundOutputManager`.
 
-`+ (AudioDeviceID)defaultOutputDevice;`
-Returns the AudioDeviceID of the currently selected output device.
+```swift
+// Retrieve the default output device
+let deviceID = Sound.output.defaultOutputDevice
 
-`+ (float)systemVolume;`
-Returns a float representing the current system volume (Range: 0.0 - 1.0).
+// Get the current volume
+let currentVolume = Sound.output.volume
+// Set the volume (values between 0 and 1)
+Sound.output.volume = 0.7
 
-`+ (void)setSystemVolume:(float)inVolume;`
-Sets the system volume of the currently selected output device to *inVolume*  (Range: 0.0 - 1.0).
+// Get the mute property value
+let isMuted = Sound.output.isMuted
+// Mute or unmute
+Sound.output.isMuted = true
+Sound.output.isMuted = false
+```
 
-`+ (void)increaseSystemVolumeBy:(float)amount;`
-Increases the system volume by *amount*.
+When interacting with these properties, all errors will be ignored. _When running in Debug mode, you will still be able to see some of the errors, as CoreAudio logs them to the console._
 
-`+ (void)decreaseSystemVolumeBy:(float)amount;`
-Decreases the system volume by *amount*.
+#### Goodies
+This library also provides some additional methods that interact with the properties shown above.
 
-`+ (void)applyMute:(Boolean)m;`
-Mute or unmute the currently selected output device.
+```swift
+// Increase the volume by a given amount
+Sound.output.increaseVolume(by: 0.2)
+// Decrease the volume by a given amount
+Sound.output.decreaseVolume(by: 0.2)
 
-`+ (Boolean)isMuted;`
-Return whether the default device is muted.
+// Set the volume and, optionally,
+// automatically mutes or unmutes if the resulting volume
+// is below or above the given threshold (which defaults to 0.005).
+// The `autoMuteUnmute` parameter can also be used on the other
+// two methods above.
+Sound.output.setVolume(0, autoMuteUnmute: true)
+```
 
-`#define	THRESHOLD`
-ISSoundAdditions will mute the output device if the computed system volume (after a call to *setSystemVolume* or *increaseSystemVolumeBy*) is lower than the threshold.
-If your application have to deal with non-standard output devices, you might need to change this value.
+### Manual Mode
+A lot of things can go wrong when trying to manipulate the system volume, muting, unmuting and even when getting the current default output device. If you're interested in intercepting these errors, you can call the methods provided by the shared instance of `SoundOutputManager`.
 
-Project State
-=============
-The ISSoundAdditions is currently in a **Release** state. You can use it freely in a stable application.
+```swift
+// Retrieve the default output device
+// Returns `nil` if no device is set or throws if an error occurs.
+let deviceID = try Sound.output.retrieveDefaultOutputDevice()
 
-Other Stuff
-=============
+// Get the current volume
+// Throws if an error occurs and will also throw if
+// the current output device doesn't have a volume (eg. virtual devices)
+let currentVolume = try Sound.output.readVolume
+// Set the volume (values between 0 and 1)
+// Throws if an error occurs, including when the current output device
+// doesn't have a volume or doesn't allow changing it.
+try Sound.output.setVolume(0.7)
 
-## What's Missing
-Currently, the ISSoundAdditions supports almost all the features we planned for it. If you're interested in contributing, don't hesitate to fork this repo!
+// Get the mute property value
+// Throws if an error occurs and will also throw if
+// the current output device doesn't have the mute property.
+let isMuted = try Sound.output.readMute()
+// Mute or unmute
+// Throws if an error occurs, including when the current output device
+// doesn't have the mute property or doesn't allow changing it.
+try Sound.output.mute(true)
+try Sound.output.mute(false)
+```
 
-## Special Thanks
-* The StackOverflow community
-* You, that are spending your time reading this text!
+## Documentation
+All classes and methods are fully documented.
+You can access the documentation in Xcode.
+
+## Compatibility
+ISSoundAdditions is compatible with **macOS 10.12** or higher.
+
+*If you're targeting older versions of macOS, you can download version 1 using the Releases tab here on GitHub. Version 1 requires macOS 10.6 or later.*
+
+## Contributions
+All contributions to expand the library are welcome. Fork the repo, make the changes you want, and open a Pull Request.
+
+If you make changes to the codebase, we are not enforcing a coding style, but we may ask you to make changes based on how the rest of the library is made.
+
+## Status
+The library can be considered **stable** and can be used in Production apps.
+
+Starting with version 2, in case breaking changes are introduced, we will follow [Semantic Versioning](https://semver.org/) strictly.
+
+## License
+ISSoundAdditions is distributed under the MIT license. See [LICENSE](https://github.com/InerziaSoft/ISSoundAdditions/blob/master/LICENSE) for details.
