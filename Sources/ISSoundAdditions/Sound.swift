@@ -13,5 +13,5 @@
 /// You can use the shared instance to change the output volume as well as
 /// mute and unmute.
 public enum Sound {
-  static let output = SoundOutputManager()
+  public static let output = SoundOutputManager()
 }
